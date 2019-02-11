@@ -38,6 +38,10 @@ Vector VectorMul( Vector V1, Vector V2 ){
 
 int main()
 {
+  FILE *file1;
+  file1 = fopen("electricF.txt","w");
+  FILE *file2;
+  file2 = fopen("magneticF.txt","w");
   Vector D[X_MAX][Y_MAX][Z_MAX], E[X_MAX][Y_MAX][Z_MAX], H[X_MAX][Y_MAX][Z_MAX];
   int n;
   double constant, dt = 1e-8, dx = 1e1, ep = 8.854*1e-12, mu = 4*3.141*1e-7;
@@ -87,6 +91,8 @@ int main()
           D[i][j][k].x = D[i][j][k].x + constant*( H[i][j][k].z - H[i][j-1][k].z - H[i][j][k].y + H[i][j][k-1].y );
           D[i][j][k].z = D[i][j][k].y + constant*( H[i][j][k].x - H[i][j][k-1].x - H[i][j][k].z + H[i-1][j][k].z );
           D[i][j][k].y = D[i][j][k].z + constant*( H[i][j][k].x - H[i-1][j][k].y - H[i][j][k].x + H[i][j-1][k].x );
+          if( n%10 == 0 )
+            fprintf( file1 , "%f,%f,%f" , D[i][j][k].x , D[i][j][k].y , D[i][j][k].z );
         }
       }
     }
@@ -111,6 +117,8 @@ int main()
           H[i][j][k].x = H[i][j][k].x - constant*( E[i][j+1][k].z - E[i][j][k].z - E[i][j][k+1].y + E[i][j][k].y );
           H[i][j][k].z = H[i][j][k].y - constant*( E[i][j][k+1].x - E[i][j][k].x - E[i+1][j][k].z + E[i][j][k].z );
           H[i][j][k].y = H[i][j][k].z - constant*( E[i+1][j][k].y - E[i][j][k].y - E[i][j+1][k].x + E[i][j][k].x );
+          if( n%10 == 0 )
+            fprintf( file2 , "%f,%f,%f" , H[i][j][k].x , H[i][j][k].y , H[i][j][k].z );
         }
       }
     }
